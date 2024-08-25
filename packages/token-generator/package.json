@@ -1,0 +1,12 @@
+{
+  "name": "@vllc/token-generator",
+  "bin": {
+    "tkg": "packages/token-generator/src/cli.js"
+  },
+  "version": "1.0.0-beta",
+  "dependencies": {
+    "@octokit/auth-token": "^5.1.1",
+    "listr2": "^8.2.4",
+    "prettier": "^3.3.3"
+  }
+}

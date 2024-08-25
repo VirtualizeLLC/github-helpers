@@ -1,0 +1,84 @@
+{
+  "name": "token-generator",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/token-generator/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "dependsOn": ["build-typescript", "build:copy:package-json"]
+    },
+    "build:typescript": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/packages/token-generator",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "packages/token-generator/src/main.ts",
+        "tsConfig": "packages/token-generator/tsconfig.app.json",
+        "assets": ["packages/token-generator/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "token-generator:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "token-generator:build:development"
+        },
+        "production": {
+          "buildTarget": "token-generator:build:production"
+        }
+      }
+    },
+    "build:copy:package-json": {
+      "dependsOn": ["build:typescript"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd dist/packages/token-generator && cp ./package.json packages/token-generator/package.json"
+      }
+    },
+    "build:link": {
+      "defaultConfiguration": "production",
+      "dependsOn": ["build:copy:package-json"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd dist/packages/token-generator;cp ./package.json packages/token-generator/package.json1; npm i; npm link; cd ../../"
+      }
+    },
+    "build:bin:run": {
+      "defaultConfiguration": "production",
+      "dependsOn": ["build:link"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cd dist/packages/token-generator;cp ./package.json packages/token-generator/package.json1; npm i; npm link; cd ../../"
+      }
+    }
+  }
+}
